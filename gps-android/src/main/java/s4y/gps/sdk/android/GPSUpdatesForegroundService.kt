@@ -1,4 +1,4 @@
-package s4y.gps.sdk.foregroundservice
+package s4y.gps.sdk.android
 
 import android.app.Notification
 import android.app.NotificationChannel

@@ -1,4 +1,4 @@
-package s4y.gps.sdk.implementation
+package s4y.gps.sdk.android.implementation
 
 import android.location.Location
 import s4y.gps.sdk.GPSUpdate

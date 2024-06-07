@@ -1,4 +1,4 @@
-package s4y.gps.sdk.implementation
+package s4y.gps.sdk.android.implementation
 
 import android.Manifest
 import android.content.Context
