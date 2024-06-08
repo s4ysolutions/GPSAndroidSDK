@@ -25,7 +25,6 @@ abstract class GPSFilterKalman : GPSFilter() {
     private var km: KalmanFilter? = null
     private var processModel: ProcessModel? = null
     private var measurementModel: MeasurementModel? = null
-    internal val kalmanFilter: KalmanFilter get() = km!!
 
     // A - transitionMatrix - state estimation, operates on previous state
     abstract fun createAMatrix(dt: Double, stateVector: StateVector): RealMatrix
