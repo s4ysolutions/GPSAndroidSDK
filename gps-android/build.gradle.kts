@@ -5,7 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "s4y.demo.mapsdksdemo.gps.android"
+    namespace = "s4y.gps.sdk.android"
+    buildFeatures {
+        buildConfig = true
+    }
+
     compileSdk = 34
 
     defaultConfig {
@@ -15,47 +19,44 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
-    buildTypes {
-        debug {
-            isMinifyEnabled = false
-        }
-        release {
-            isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+}
+
+kotlin {
+    jvmToolchain{
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
 dependencies {
-    implementation(project(":gps"))
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.android.gms:play-services-location:21.2.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("androidx.lifecycle:lifecycle-service:2.8.1")
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("com.google.truth:truth:1.1.5")
-    testImplementation(kotlin("test-junit"))
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    api(project(":gps"))
+    implementation(libs.androidx.appcompat)
+    implementation(libs.play.services.location)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.lifecycle.service)
+    testImplementation(libs.junit)
+    testImplementation(libs.truth)
+    testImplementation(libs.kotlin.test.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 }
+
+tasks.register<Jar>("javaSourcesJar") {
+    archiveClassifier.set("sources")
+    from(android.sourceSets["main"].java.srcDirs)
+}
+
 
 publishing {
     publications {
         create<MavenPublication>("Release") {
             groupId = "solutions.s4y.gps"
-            artifactId = "gps-android"
-            version = "1.0.0" // replace with your actual version
+            artifactId = "gps-sdk-android"
+            version = "1.0.0-dev.2"
 
             pom {
                 packaging = "aar"
@@ -83,6 +84,12 @@ publishing {
                     developerConnection.set("scm:git:ssh://github.com/s4ysolutions/GPSAndroidSDK.git")
                     url.set("https://github.com/s4ysolutions/GPSAndroidSDK")
                 }
+            }
+
+            afterEvaluate {
+                artifact(tasks["bundleReleaseAar"])
+                artifact(project(":gps").tasks["jar"])
+                artifact(tasks["javaSourcesJar"])
             }
         }
     }

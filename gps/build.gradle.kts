@@ -8,6 +8,13 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+kotlin {
+    jvmToolchain{
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+
 tasks.test {
     useJUnitPlatform()
     testLogging {
@@ -16,10 +23,10 @@ tasks.test {
 }
 
 dependencies {
-    implementation("org.apache.commons:commons-math3:3.6.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    testImplementation(platform("org.junit:junit-bom:5.10.2"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    implementation(libs.commons.math3)
+    implementation(libs.kotlinx.coroutines.core)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter.api)
     // testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
