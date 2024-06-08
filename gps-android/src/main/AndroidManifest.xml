@@ -7,7 +7,7 @@
 
     <application>
         <service
-            android:name="s4y.gps.sdk.android.foregroundservice.GPSUpdatesForegroundService"
+            android:name="s4y.gps.sdk.android.GPSUpdatesForegroundService"
             android:foregroundServiceType="location" />
     </application>
 </manifest>
