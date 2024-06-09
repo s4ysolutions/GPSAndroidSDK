@@ -13,7 +13,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        minSdk = 24
+        minSdk = 18
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -32,31 +32,33 @@ kotlin {
     }
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
+}
+
 dependencies {
-    api(project(":gps"))
     implementation(libs.androidx.appcompat)
+    implementation(libs.commons.math3)
     implementation(libs.play.services.location)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.lifecycle.service)
-    testImplementation(libs.junit)
-    testImplementation(libs.truth)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.jupiter.api)
     testImplementation(libs.kotlin.test.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
-
-tasks.register<Jar>("javaSourcesJar") {
-    archiveClassifier.set("sources")
-    from(android.sourceSets["main"].java.srcDirs)
-}
-
 
 publishing {
     publications {
         create<MavenPublication>("Release") {
             groupId = "solutions.s4y.gps"
             artifactId = "gps-sdk-android"
-            version = "1.0.0-dev.2"
+            version = "1.0.0-dev.3"
 
             pom {
                 packaging = "aar"
@@ -88,8 +90,6 @@ publishing {
 
             afterEvaluate {
                 artifact(tasks["bundleReleaseAar"])
-                artifact(project(":gps").tasks["jar"])
-                artifact(tasks["javaSourcesJar"])
             }
         }
     }

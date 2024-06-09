@@ -1,4 +1,4 @@
-package s4y.gps.sdk.filters.kalman.gpsfilterkalman
+package s4y.gps.sdk.gpsfilterkalman
 
 import org.junit.jupiter.api.Named
 import org.junit.jupiter.params.provider.Arguments

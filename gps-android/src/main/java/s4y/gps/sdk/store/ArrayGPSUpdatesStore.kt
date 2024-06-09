@@ -2,13 +2,13 @@ package s4y.gps.sdk.store
 
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import s4y.gps.sdk.store.dependencies.IGPSUpdatesStorage
+import s4y.gps.sdk.store.dependencies.IGPSUpdatesPersistence
 import s4y.gps.sdk.store.dependencies.IGPSUpdatesStore
 import s4y.gps.sdk.GPSUpdate
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.withLock
 
-class ArrayGPSUpdatesStore(capacity: Int, private val persistentStorage: IGPSUpdatesStorage) :
+class ArrayGPSUpdatesStore(capacity: Int, private val persistentStorage: IGPSUpdatesPersistence) :
     IGPSUpdatesStore {
     private val lockBuffer = ReentrantLock()
     private var buffer = Array(capacity) { GPSUpdate.emptyGPSUpdate }

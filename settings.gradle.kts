@@ -20,5 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "GPSAndroid-SDK"
-include(":gps")
 include(":gps-android")

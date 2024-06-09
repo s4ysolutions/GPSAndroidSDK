@@ -2,8 +2,6 @@ package s4y.gps.sdk.data
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import s4y.gps.sdk.data.Projection
-import s4y.gps.sdk.data.Units
 import kotlin.math.sqrt
 
 class ProjectionTest {

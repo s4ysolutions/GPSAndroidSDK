@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_location_manager">На этом устройстве нет GPS</string>
+    <string name="request_ignore_battery_optimization">Android ограничивает сетевую активность, когда экран выключен. Чтобы отправлять обновления чаще одного раза в 15 минут, вам нужно отключить оптимизацию батареи для этого приложения.</string>
+    <string name="request_ignore_battery_optimization_cancel">Соблюдать лимит в 15 минут</string>
+    <string name="request_ignore_battery_optimization_ok">Открыть настройки батареи</string>
+    <string name="request_ignore_battery_optimization_title">Предупреждение об использовании батареи</string>
+    <string name="request_permission_title">Разрешить доступ к позиции GPS</string>
+    <string name="request_location_permission">WayToday позволяет любому, кто знает ваш ID, видеть последние 500 местоположений на сайте https://way.today в течение 2 недель или до изменения ID</string>
+    <string name="request_permission_ok">Разрешить отслеживание GPS</string>
+    <string name="request_location_cancel">Не отслеживать</string>
+</resources>

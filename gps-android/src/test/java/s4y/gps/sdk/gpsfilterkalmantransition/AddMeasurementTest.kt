@@ -1,4 +1,4 @@
-package s4y.gps.sdk.filters.kalman.gpsfilterkalmantransition
+package s4y.gps.sdk.gpsfilterkalmantransition
 
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertEquals
