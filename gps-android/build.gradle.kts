@@ -40,11 +40,11 @@ tasks.withType<Test> {
 }
 
 dependencies {
-    implementation(libs.androidx.appcompat)
-    implementation(libs.commons.math3)
-    implementation(libs.play.services.location)
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.androidx.lifecycle.service)
+    api(libs.androidx.appcompat)
+    api(libs.commons.math3)
+    api(libs.play.services.location)
+    api(libs.kotlinx.coroutines.core)
+    api(libs.androidx.lifecycle.service)
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter.api)
@@ -58,7 +58,7 @@ publishing {
         create<MavenPublication>("Release") {
             groupId = "solutions.s4y.gps"
             artifactId = "gps-sdk-android"
-            version = "1.0.0-dev.3"
+            version = "2.0.0-alpha1"
 
             pom {
                 packaging = "aar"
@@ -89,7 +89,7 @@ publishing {
             }
 
             afterEvaluate {
-                artifact(tasks["bundleReleaseAar"])
+                from(components["release"])
             }
         }
     }

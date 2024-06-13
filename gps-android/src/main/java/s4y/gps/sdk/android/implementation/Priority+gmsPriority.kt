@@ -1,7 +1,7 @@
 package s4y.gps.sdk.android.implementation
 
 import com.google.android.gms.location.Priority
-import s4y.gps.sdk.dependencies.IGPSProvider
+import s4y.gps.sdk.IGPSProvider
 
 
 internal val IGPSProvider.Priority.gmsPriority: Int

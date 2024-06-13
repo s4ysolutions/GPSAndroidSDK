@@ -3,6 +3,7 @@ package s4y.gps.sdk.dependencies
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import s4y.gps.sdk.GPSUpdate
+import s4y.gps.sdk.IGPSProvider
 
 interface IGPSUpdatesProvider : IGPSProvider {
     // locationUpdates parameters
@@ -14,11 +15,12 @@ interface IGPSUpdatesProvider : IGPSProvider {
     var waitForAccurateLocation: Boolean
 
     fun startUpdates()
-
     fun stopUpdates()
 
     interface IUpdates {
         fun asSharedFlow(): SharedFlow<GPSUpdate>
+        fun addListener(listener: (GPSUpdate) -> Unit)
+        fun removeListener(listener: (GPSUpdate) -> Unit)
     }
 
     val updates: IUpdates
@@ -29,12 +31,5 @@ interface IGPSUpdatesProvider : IGPSProvider {
         ACTIVE,
     }
 
-    interface IStatus {
-        fun asStateFlow(): StateFlow<Status>
-        val isIdle: Boolean get() = asStateFlow().value == Status.IDLE
-        val isWarmingUp: Boolean get() = asStateFlow().value == Status.WARMING_UP
-        val isActive: Boolean get() = asStateFlow().value == Status.ACTIVE
-    }
-
-    val status: IStatus
+    fun asStateFlow(): StateFlow<Status>
 }

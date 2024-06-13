@@ -1,4 +1,4 @@
-package s4y.gps.sdk.dependencies
+package s4y.gps.sdk
 
 interface IGPSProvider {
     enum class Priority {
