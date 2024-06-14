@@ -9,4 +9,7 @@
     <string name="request_location_permission">يسمح WayToday لأي شخص يعرف الكود برؤية آخر 500 مكان على https://way.today بينما الرمز هو نفسه لمدة تصل إلى أسبوعين</string>
     <string name="request_permission_ok">السماح بتتبع GPS</string>
     <string name="request_location_cancel">لا تتبع</string>
+    <string name="gps_in_background">يعمل في الخلفية</string>
+    <string name="gps_in_background_optimized">يعمل في الخلفية. تم تشغيل تحسين البطارية. التحديثات تتم بأكبر قدر ممكن.</string>
+    <string name="gps_in_background_not_optimized">يعمل في الخلفية. تم إيقاف تحسين البطارية.</string>
 </resources>

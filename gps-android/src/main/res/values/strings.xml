@@ -9,4 +9,7 @@
     <string name="request_location_permission">WayToday allows anybody who knows your ID to see the last 500 locations on the site https://way.today for 2 weeks or until the ID changed</string>
     <string name="request_permission_ok">Allow GPS tracking</string>
     <string name="request_location_cancel">Don\'t track</string>
+    <string name="gps_in_background">is running in the backroud</string>
+    <string name="gps_in_background_optimized">is running in the background. Battery optimization is on. Updates are as often as possible.</string>
+    <string name="gps_in_background_not_optimized">is running in the background. Battery optimization is off.</string>
 </resources>

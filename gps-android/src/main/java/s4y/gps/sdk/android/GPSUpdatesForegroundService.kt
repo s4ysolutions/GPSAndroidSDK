@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
@@ -118,6 +119,8 @@ class GPSUpdatesForegroundService : LifecycleService() {
                 notificationChannelName,
                 notificationChannelImportance
             )
+            notificationChannel.setSound(null, null)
+            notificationChannel.setShowBadge(false)
             val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             println("GPSUpdatesForegroundService.createNotificationChannel(${notificationChannel},${System.currentTimeMillis()})")
             manager.createNotificationChannel(notificationChannel)
@@ -140,24 +143,26 @@ class GPSUpdatesForegroundService : LifecycleService() {
     }
 
     private fun defaultNotificationBuilder(builder: NotificationCompat.Builder): NotificationCompat.Builder {
-        val pendingIntent = packageManager.getLaunchIntentForPackage(this.packageName)?.let{intent ->
-            intent.putExtra(GPS_SERVICE_NOTIFICATION, ACTION_STOP_TRACKING)
-            PendingIntent.getActivity(
-                this,
-                0,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-        } ?: run {
-            val intent = Intent(this, this::class.java).setAction(ACTION_STOP_TRACKING)
-            intent.putExtra(GPS_SERVICE_NOTIFICATION, ACTION_STOP_TRACKING)
-            PendingIntent.getService(
-                this,
-                0,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-        }
+        val pendingIntent =
+            packageManager.getLaunchIntentForPackage(this.packageName)?.let { intent ->
+                intent.putExtra(GPS_SERVICE_NOTIFICATION, ACTION_STOP_TRACKING)
+                PendingIntent.getActivity(
+                    this,
+                    0,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+            } ?: run {
+                val intent = Intent(this, this::class.java).setAction(ACTION_STOP_TRACKING)
+                intent.putExtra(GPS_SERVICE_NOTIFICATION, ACTION_STOP_TRACKING)
+                PendingIntent.getService(
+                    this,
+                    0,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+            }
+
 
         /*
         val stopIntent = PendingIntent.getService(
@@ -167,15 +172,38 @@ class GPSUpdatesForegroundService : LifecycleService() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
          */
-        return builder
+        builder
             .setContentTitle(notificationContentTitle)
             .setContentIntent(pendingIntent)
-            .setSmallIcon(notificationSmallIcon)
+            .setSmallIcon(
+                if (useApplicationNotificationSmallIcon)
+                    getApplicationInfo().icon
+                else notificationSmallIcon
+            )
             //   .addAction(android.R.drawable.ic_media_pause, "Stop", stopIntent)
             .setOngoing(true)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setCategory(NotificationCompat.CATEGORY_SERVICE)
             .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+            .setTicker(null)
+
+        val message = notificationContent ?: run {
+            val pm = getSystemService(POWER_SERVICE) as PowerManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                resources.getString(
+                    if (pm.isIgnoringBatteryOptimizations(getPackageName()))
+                        R.string.gps_in_background_not_optimized
+                    else
+                        R.string.gps_in_background_optimized
+                )
+            } else {
+                resources.getString(R.string.gps_in_background)
+            }
+        }
+        if (message.isNotEmpty() ) {
+            builder.setStyle(NotificationCompat.BigTextStyle().bigText(message))
+        }
+        return builder
     }
 
     companion object {
@@ -196,7 +224,7 @@ class GPSUpdatesForegroundService : LifecycleService() {
 
         @JvmStatic
         var notificationChannelImportance = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            NotificationManager.IMPORTANCE_DEFAULT
+            NotificationManager.IMPORTANCE_MIN
         } else {
             0
         }
@@ -205,7 +233,13 @@ class GPSUpdatesForegroundService : LifecycleService() {
         var notificationContentTitle = "S4Y GPS Demo"
 
         @JvmStatic
+        var notificationContent: String? = null
+
+        @JvmStatic
         var notificationSmallIcon = R.drawable.notification
+
+        @JvmStatic
+        var useApplicationNotificationSmallIcon = true
 
         @JvmStatic
         var updatesManager: GPSUpdatesManager? = null
