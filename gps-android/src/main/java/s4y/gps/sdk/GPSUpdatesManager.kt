@@ -20,7 +20,10 @@ import s4y.gps.sdk.filters.GPSFilter
 import s4y.gps.sdk.filters.kalman.GPSFilterKalmanConstantPositionProvider
 import s4y.gps.sdk.store.ArrayGPSUpdatesStore
 import java.io.Closeable
-
+// TODO: coroutines/rx/java API causes extra dependencies
+//       it should be rethought
+//       callback should be primary API instead of coroutines?
+//       rx dependencies are implementation only, so they won't be bloat the final app?
 @Suppress("unused")
 class GPSUpdatesManager(
     private val updatesProvider: IGPSUpdatesProvider,
@@ -67,6 +70,13 @@ class GPSUpdatesManager(
 
         override fun removeListener(listener: (IGPSUpdatesProvider.Status) -> Unit) {
             synchronized(_statusListeners) { _statusListeners.remove(listener) }
+        }
+
+        override fun toString(): String {
+            if (isIdle) return "Idle"
+            if (isWarmingUp) return "Warming up"
+            if (isActive) return "Active"
+            return "Unknown"
         }
     }
 
@@ -143,27 +153,32 @@ class GPSUpdatesManager(
         }
         .launchIn(getUpdatesScope)
 
+    interface IFilter {
+        // kotlin coroutines API
+        fun asStateFlow(): StateFlow<GPSFilter>
+        // java API
+        fun set(filter: GPSFilter)
+        fun get(): GPSFilter
+    }
+
     interface IAll {
+        // kotlin coroutines API
         fun asStateFlow(): StateFlow<Array<GPSUpdate>>
+        // java API
         val snapshot: Array<GPSUpdate>
     }
 
-    interface IFilter {
-        fun set(filter: GPSFilter)
-        fun get(): GPSFilter
-        fun asStateFlow(): StateFlow<GPSFilter>
-    }
-
     interface ILast {
+        // kotlin coroutines API
         fun asSharedFlow(): SharedFlow<GPSUpdate>
+        // java API
         fun addListener(listener: (GPSUpdate) -> Unit)
         fun removeListener(listener: (GPSUpdate) -> Unit)
     }
 
     interface IStatus {
-        fun asStateFlow(): StateFlow<IGPSUpdatesProvider.Status>
-
         // kotlin coroutines API
+        fun asStateFlow(): StateFlow<IGPSUpdatesProvider.Status>
         // java API
         fun addListener(listener: (IGPSUpdatesProvider.Status) -> Unit)
         fun removeListener(listener: (IGPSUpdatesProvider.Status) -> Unit)

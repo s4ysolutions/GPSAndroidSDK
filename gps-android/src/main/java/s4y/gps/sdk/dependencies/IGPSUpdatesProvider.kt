@@ -29,6 +29,7 @@ interface IGPSUpdatesProvider : IGPSProvider {
         IDLE,
         WARMING_UP,
         ACTIVE,
+        ERROR_NO_PERMISSION,
     }
 
     fun asStateFlow(): StateFlow<Status>

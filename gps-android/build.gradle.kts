@@ -45,6 +45,7 @@ dependencies {
     api(libs.play.services.location)
     api(libs.kotlinx.coroutines.core)
     api(libs.androidx.lifecycle.service)
+
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.jupiter.api)

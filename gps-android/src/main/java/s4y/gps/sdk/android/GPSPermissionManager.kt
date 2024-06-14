@@ -29,7 +29,8 @@ class GPSPermissionManager {
             if (needPermissionRequest(activity)) {
                 if (activity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
                     val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
-                    builder.setMessage(message)
+                    builder
+                        .setMessage(message)
                         .setTitle(R.string.request_permission_title)
                         .setPositiveButton(
                             android.R.string.ok
@@ -49,6 +50,7 @@ class GPSPermissionManager {
                 }
             }
         }
+
         @JvmStatic
         fun requestPermissions(activity: Activity, message: Int) {
             requestPermissions(activity, activity.getString(message))

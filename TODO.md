@@ -1,0 +1,1 @@
+ - Test GPSUpdatesManager with 1 point capacity

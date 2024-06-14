@@ -41,14 +41,16 @@ class GPSPowerManager(private val context: Context) {
         requestIgnoreOptimization(
             R.string.request_ignore_battery_optimization,
             R.string.request_ignore_battery_optimization_title,
-            R.string.request_ignore_battery_optimization_ok
+            R.string.request_ignore_battery_optimization_ok,
+            R.string.request_ignore_battery_optimization_cancel
         )
     }
 
     fun requestIgnoreOptimization(
         stringRequestIgnoreBatteryOptimizationMessage: Int,
         stringRequestIgnoreBatteryOptimizationTitle: Int,
-        stringRequestIgnoreBatteryOptimizationOk: Int
+        stringRequestIgnoreBatteryOptimizationOk: Int,
+        stringRequestIgnoreBatteryOptimizationCancel: Int
     ) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val builder: AlertDialog.Builder = AlertDialog.Builder(context)
@@ -63,7 +65,7 @@ class GPSPowerManager(private val context: Context) {
                     intent.setAction(ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
                     context.startActivity(intent)
                 }
-                .setNegativeButton(R.string.request_ignore_battery_optimization_cancel) { dialog, which ->
+                .setNegativeButton(stringRequestIgnoreBatteryOptimizationCancel) { dialog, which ->
                     ignoreOptimizationRequested = true
                     dialog.cancel()
                 }
@@ -79,6 +81,19 @@ class GPSPowerManager(private val context: Context) {
         @JvmStatic
         fun requestIgnoreOptimization(context: Context) =
             GPSPowerManager(context).requestIgnoreOptimization()
+        @JvmStatic
+        fun requestIgnoreOptimization(
+            context: Context,
+            stringRequestIgnoreBatteryOptimizationMessage: Int,
+            stringRequestIgnoreBatteryOptimizationTitle: Int,
+            stringRequestIgnoreBatteryOptimizationOk: Int,
+            stringRequestIgnoreBatteryOptimizationCancel: Int,
+        ) = GPSPowerManager(context).requestIgnoreOptimization(
+            stringRequestIgnoreBatteryOptimizationMessage,
+            stringRequestIgnoreBatteryOptimizationTitle,
+            stringRequestIgnoreBatteryOptimizationOk,
+            stringRequestIgnoreBatteryOptimizationCancel
+        )
 
         @JvmStatic
         fun requestIgnoreOptimization(
@@ -89,8 +104,29 @@ class GPSPowerManager(private val context: Context) {
         ) = GPSPowerManager(context).requestIgnoreOptimization(
             stringRequestIgnoreBatteryOptimizationMessage,
             stringRequestIgnoreBatteryOptimizationTitle,
-            stringRequestIgnoreBatteryOptimizationOk
+            stringRequestIgnoreBatteryOptimizationOk,
+            R.string.request_ignore_battery_optimization_cancel
         )
-
+        @JvmStatic
+        fun requestIgnoreOptimization(
+            context: Context,
+            stringRequestIgnoreBatteryOptimizationMessage: Int,
+            stringRequestIgnoreBatteryOptimizationTitle: Int,
+        ) = GPSPowerManager(context).requestIgnoreOptimization(
+            stringRequestIgnoreBatteryOptimizationMessage,
+            stringRequestIgnoreBatteryOptimizationTitle,
+            R.string.request_ignore_battery_optimization_ok,
+            R.string.request_ignore_battery_optimization_cancel,
+        )
+        @JvmStatic
+        fun requestIgnoreOptimization(
+            context: Context,
+            stringRequestIgnoreBatteryOptimizationMessage: Int,
+        ) = GPSPowerManager(context).requestIgnoreOptimization(
+            stringRequestIgnoreBatteryOptimizationMessage,
+            R.string.request_ignore_battery_optimization_title,
+            R.string.request_ignore_battery_optimization_ok,
+            R.string.request_ignore_battery_optimization_cancel,
+        )
     }
 }

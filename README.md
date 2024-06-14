@@ -3,13 +3,32 @@
 ### Add dependency
 [![](https://jitpack.io/v/s4ysolutions/GPSAndroidSDK.svg)](https://jitpack.io/#s4ysolutions/GPSAndroidSDK)
 
-### The SDK heavely depends on the kotlin flow library, so you need to add the following dependencies to your project
-
-```gradle
-implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
-implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
-```
 
 ### To request GPS updates
 
-Instantiate a `GPSUpdatesManager` object
+```java
+        // use FusedGPSUpdatesProvider for location updates
+        IGPSUpdatesProvider gpsUpdatesProvider = new FusedGPSUpdatesProvider(context, looper);
+        // create GPSUpdatesManager with 500 points capacity
+        GPSUpdatesManager gpsUpdatesManager = new GPSUpdatesManager(gpsUpdatesProvider, 500);
+        // subscribe to filtered GPS updates        
+        gpsUpdatesManager.getLast().addListener(gpsUpdate -> {...});
+        // start GPS updates        
+        gpsUpdatesManager.start();
+```
+
+### To init and start GPS background service
+
+```java
+        // this makes service to stop itself if updates has been stopped
+        GPSUpdatesForegroundService.setUpdatesManager(gpsUpdatesManager);
+        // Optional notification settings
+        GPSUpdatesForegroundService.setNotificationChannelId("gps_updates");
+        GPSUpdatesForegroundService.setNotificationChannelName("GPS Updates");
+        GPSUpdatesForegroundService.setNotificationId(23);
+        GPSUpdatesForegroundService.setNotificationContentTitle("Stop tracking");
+        // start service
+        // due the service is terminating on gpsUpdatesManager stop
+        // it should be started manualy every time gpsUpdatesManager starts
+        GPSUpdatesForegroundService.start(context);
+```

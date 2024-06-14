@@ -68,7 +68,11 @@ class GPSPreferences(context: Context) {
             preferences.edit().putBoolean("waitForAccurateLocation", value).apply()
         }
 
-    var background: Boolean =
+    // Currently used only for the Boot receiver
+    // and intended to be used to persist the state of the tracking
+    // it also may be used to the framework consumer
+    // IMPORTANT: it is not used to control GPSUpdatesManager.stop/start
+    var keepAlive: Boolean =
         preferences.getBoolean("background", false)
         set(value) {
             field = value
@@ -77,6 +81,6 @@ class GPSPreferences(context: Context) {
 
     companion object {
         @JvmStatic
-        fun isBackground(context: Context): Boolean = GPSPreferences(context).background
+        fun keepAlive(context: Context): Boolean = GPSPreferences(context).keepAlive
     }
 }

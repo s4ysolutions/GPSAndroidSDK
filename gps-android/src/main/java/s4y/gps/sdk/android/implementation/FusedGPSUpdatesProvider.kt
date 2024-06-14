@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import s4y.gps.sdk.IGPSProvider
 import s4y.gps.sdk.dependencies.IGPSUpdatesProvider
 import s4y.gps.sdk.GPSUpdate
+import s4y.gps.sdk.android.GPSPermissionManager
 import s4y.gps.sdk.android.GPSPreferences
 
 @Suppress("unused")
@@ -135,6 +136,10 @@ class FusedGPSUpdatesProvider(private val context: Context, private val looper: 
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     override fun startUpdates() {
         stopUpdates()
+        if (GPSPermissionManager.needPermissionRequest(context)) {
+            _notifyStatusChanged(IGPSUpdatesProvider.Status.ERROR_NO_PERMISSION)
+            return
+        }
         synchronized(clientLock) {
             val actualLooper = looper ?: run {
                 gpsHandlerThread = HandlerThread("LocationUpdatesThread").apply {
