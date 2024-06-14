@@ -67,4 +67,16 @@ class Preferences(context: Context) {
             field = value
             preferences.edit().putBoolean("waitForAccurateLocation", value).apply()
         }
+
+    var background: Boolean =
+        preferences.getBoolean("background", false)
+        set(value) {
+            field = value
+            preferences.edit().putBoolean("background", value).apply()
+        }
+
+    companion object {
+        @JvmStatic
+        fun isBackground(context: Context): Boolean = GPSPreferences(context).background
+    }
 }
