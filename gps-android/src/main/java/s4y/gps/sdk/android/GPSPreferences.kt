@@ -1,9 +1,9 @@
-package s4y.gps.sdk.android.implementation
+package s4y.gps.sdk.android
 
 import android.content.Context
 import s4y.gps.sdk.IGPSProvider
 
-class Preferences(context: Context) {
+class GPSPreferences(context: Context) {
     private val preferences = context.getSharedPreferences("gps_sdk", Context.MODE_PRIVATE)
     var granularity: IGPSProvider.Granularity =
         preferences.getInt("granularity", IGPSProvider.Granularity.PERMISSION_LEVEL.ordinal)

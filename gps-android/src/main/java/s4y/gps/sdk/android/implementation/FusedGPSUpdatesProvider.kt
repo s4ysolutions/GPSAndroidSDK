@@ -17,11 +17,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import s4y.gps.sdk.IGPSProvider
 import s4y.gps.sdk.dependencies.IGPSUpdatesProvider
 import s4y.gps.sdk.GPSUpdate
+import s4y.gps.sdk.android.GPSPreferences
 
 @Suppress("unused")
 class FusedGPSUpdatesProvider(private val context: Context, private val looper: Looper? = null) :
     IGPSUpdatesProvider {
-        private val preferences = Preferences(context)
+    private val preferences = GPSPreferences(context)
     override var granularity: IGPSProvider.Granularity
         get() = preferences.granularity
         set(value) {
