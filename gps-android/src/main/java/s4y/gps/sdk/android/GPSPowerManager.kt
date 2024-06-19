@@ -2,9 +2,11 @@ package s4y.gps.sdk.android
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.PowerManager
 import android.provider.Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
+import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
 import androidx.appcompat.app.AlertDialog
 
 @Suppress("unused")
@@ -28,9 +30,6 @@ class GPSPowerManager(private val context: Context) {
                 val packageName = context.packageName
                 val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
                 val isIgnoringBatteryOptimizations = pm.isIgnoringBatteryOptimizations(packageName)
-                println(
-                    "GPSPowerManager.needRequestIgnoreOptimization(${packageName},${isIgnoringBatteryOptimizations}"
-                )
                 !isIgnoringBatteryOptimizations
             } else {
                 false
@@ -52,6 +51,7 @@ class GPSPowerManager(private val context: Context) {
         stringRequestIgnoreBatteryOptimizationOk: Int,
         stringRequestIgnoreBatteryOptimizationCancel: Int
     ) {
+        if (!needRequestIgnoreOptimization) return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val builder: AlertDialog.Builder = AlertDialog.Builder(context)
             builder.setMessage(stringRequestIgnoreBatteryOptimizationMessage)
@@ -62,7 +62,8 @@ class GPSPowerManager(private val context: Context) {
                     ignoreOptimizationRequested = true
                     dialog.dismiss()
                     val intent = Intent()
-                    intent.setAction(ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS)
+                    intent.action = ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                    intent.data = Uri.parse("package:${context.packageName}")
                     context.startActivity(intent)
                 }
                 .setNegativeButton(stringRequestIgnoreBatteryOptimizationCancel) { dialog, which ->

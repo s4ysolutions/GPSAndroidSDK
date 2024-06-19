@@ -10,6 +10,6 @@
     <string name="request_permission_ok">Разрешить отслеживание GPS</string>
     <string name="request_location_cancel">Не отслеживать</string>
     <string name="gps_in_background">работает в фоновом режиме</string>
-    <string name="gps_in_background_optimized">работает в фоновом режиме. Оптимизация батареи включена. Обновления происходят как можно чаще.</string>
-    <string name="gps_in_background_not_optimized">работает в фоновом режиме. Оптимизация батареи отключена.</string>
+    <string name="gps_in_background_optimized">работает в фоновом режиме. Оптимизация батареи включена. Позиция может обновляться с задержкой.</string>
+    <string name="gps_in_background_not_optimized">работает в фоновом режиме.</string>
 </resources>
