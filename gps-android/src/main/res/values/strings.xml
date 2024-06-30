@@ -7,6 +7,7 @@
     <string name="request_ignore_battery_optimization_title">Battery usage warning</string>
     <string name="request_permission_title">Allow access GPS position</string>
     <string name="request_location_permission">WayToday allows anybody who knows your ID to see the last 500 locations on the site https://way.today for 2 weeks or until the ID changed</string>
+    <string name="request_location_background_permission">Background location is needed for continuous updates and automatic tracking on startup.</string>
     <string name="request_permission_ok">Allow GPS tracking</string>
     <string name="request_location_cancel">Don\'t track</string>
     <string name="gps_in_background">is running in the background.</string>

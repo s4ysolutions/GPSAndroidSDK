@@ -12,4 +12,5 @@
     <string name="gps_in_background">работает в фоновом режиме</string>
     <string name="gps_in_background_optimized">работает в фоновом режиме. Оптимизация батареи включена. Позиция может обновляться с задержкой.</string>
     <string name="gps_in_background_not_optimized">работает в фоновом режиме.</string>
+    <string name="request_location_background_permission">Необходим доступ к фоновому местоположению для постоянного обновления данных и автоматического отслеживания при запуске.</string>
 </resources>

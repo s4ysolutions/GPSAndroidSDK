@@ -13,47 +13,117 @@ class GPSPermissionManager {
     companion object {
         private val REQUEST_ENABLE_LOCATION = 22031971
 
-        @JvmStatic
-        fun needPermissionRequest(context: Context): Boolean {
-            return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        private fun isNotGranted(permission: Int) = permission != PackageManager.PERMISSION_GRANTED
+
+        private fun needLocationPermissionRequest(context: Context): Boolean {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+                return false
+
+            return isNotGranted(context.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION))
+                    &&
+                    isNotGranted(context.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION))
+
+        }
+
+        private fun needBackgroundLocationPermissionRequest(context: Context): Boolean {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+                return false
+
+            return isNotGranted(context.checkSelfPermission(Manifest.permission.ACCESS_BACKGROUND_LOCATION))
         }
 
         @JvmStatic
-        fun requestPermissions(activity: Activity) {
-            requestPermissions(activity, R.string.request_location_permission)
+        fun needPermissionRequest(context: Context, workInBackground: Boolean = true): Boolean {
+            val locationsNotGranted = needLocationPermissionRequest(context)
+
+            if (!workInBackground)
+                return locationsNotGranted
+
+            return needBackgroundLocationPermissionRequest(context)
         }
 
         @JvmStatic
-        fun requestPermissions(activity: Activity, message: String) {
-            if (needPermissionRequest(activity)) {
-                if (activity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
-                    builder
-                        .setMessage(message)
-                        .setTitle(R.string.request_permission_title)
-                        .setPositiveButton(
-                            android.R.string.ok
-                        ) { dialog, which ->
-                            activity.requestPermissions(
-                                arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
-                                REQUEST_ENABLE_LOCATION
-                            )
-                        }
-                        .setNegativeButton(android.R.string.cancel) { dialog, which -> dialog.cancel() }
-                        .show()
-                } else {
-                    activity.requestPermissions(
-                        arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
-                        REQUEST_ENABLE_LOCATION
-                    )
+        fun requestPermissions(activity: Activity, workInBackground: Boolean = true) {
+            if (workInBackground)
+                requestPermissions(
+                    activity,
+                    R.string.request_location_permission,
+                    R.string.request_location_background_permission
+                )
+            else
+                requestPermissions(
+                    activity,
+                    R.string.request_location_permission,
+                    null
+                )
+        }
+
+        @JvmStatic
+        fun requestPermissions(
+            activity: Activity,
+            messageForLocation: String,
+            messageForBackgroundLocation: String?
+        ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (needLocationPermissionRequest(activity)) {
+                    if (activity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                        val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
+                        builder
+                            .setMessage(messageForLocation)
+                            .setTitle(R.string.request_permission_title)
+                            .setPositiveButton(
+                                android.R.string.ok
+                            ) { _, _ ->
+                                activity.requestPermissions(
+                                    arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
+                                    REQUEST_ENABLE_LOCATION
+                                )
+                            }
+                            .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.cancel() }
+                            .show()
+                    } else {
+                        activity.requestPermissions(
+                            arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
+                            REQUEST_ENABLE_LOCATION
+                        )
+                    }
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && messageForBackgroundLocation != null && needBackgroundLocationPermissionRequest(activity)) {
+                    if (activity.shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
+                        val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
+                        builder
+                            .setMessage(messageForBackgroundLocation)
+                            .setTitle(R.string.request_permission_title)
+                            .setPositiveButton(
+                                android.R.string.ok
+                            ) { _, _ ->
+                                activity.requestPermissions(
+                                    arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+                                    REQUEST_ENABLE_LOCATION
+                                )
+                            }
+                            .setNegativeButton(android.R.string.cancel) { dialog, _ -> dialog.cancel() }
+                            .show()
+                    } else {
+                        activity.requestPermissions(
+                            arrayOf(Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+                            REQUEST_ENABLE_LOCATION
+                        )
+                    }
                 }
             }
         }
 
         @JvmStatic
-        fun requestPermissions(activity: Activity, message: Int) {
-            requestPermissions(activity, activity.getString(message))
+        fun requestPermissions(
+            activity: Activity,
+            messageForLocation: Int,
+            messageForBackgroundLocation: Int?
+        ) {
+            requestPermissions(
+                activity,
+                activity.getString(messageForLocation),
+                messageForBackgroundLocation?.let { activity.getString(it) }
+            )
         }
 
         @JvmStatic

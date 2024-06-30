@@ -12,4 +12,5 @@
     <string name="gps_in_background">يعمل في الخلفية</string>
     <string name="gps_in_background_optimized">يعمل في الخلفية. تم تشغيل تحسين البطارية. قد يتأخر تحديث الموقع.</string>
     <string name="gps_in_background_not_optimized">يعمل في الخلفية</string>
+    <string name="request_location_background_permission">مطلوب الوصول إلى الموقع في الخلفية للحصول على تحديثات مستمرة والتتبع التلقائي عند التشغيل.</string>
 </resources>
