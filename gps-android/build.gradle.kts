@@ -1,6 +1,5 @@
 plugins {
     id("com.android.library")
-    id("org.jetbrains.kotlin.android")
     id("maven-publish")
 }
 
@@ -10,7 +9,7 @@ android {
         buildConfig = true
     }
 
-    compileSdk = 34
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 18
@@ -19,16 +18,15 @@ android {
         consumerProguardFiles("consumer-rules.pro")
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
     publishing {
         singleVariant("release") {
             withSourcesJar()
         }
-    }
-}
-
-kotlin {
-    jvmToolchain{
-        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
@@ -59,7 +57,7 @@ publishing {
         create<MavenPublication>("Release") {
             groupId = "solutions.s4y.gps"
             artifactId = "gps-sdk-android"
-            version = "3.2.0"
+            version = "3.3.0"
 
             pom {
                 packaging = "aar"
