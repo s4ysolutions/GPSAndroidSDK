@@ -57,7 +57,7 @@ publishing {
         create<MavenPublication>("Release") {
             groupId = "solutions.s4y.gps"
             artifactId = "gps-sdk-android"
-            version = "3.3.2"
+            version = "3.3.3"
 
             pom {
                 packaging = "aar"
